@@ -3,10 +3,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-let jsonParser = bodyParser.json();
 const port = 3000;
 
-let urlencodedParser = bodyParser.urlencoded({ extended: false })
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
     console.log(req.url);
@@ -14,11 +13,20 @@ app.get("/", (req, res) => {
 });
 
 app.get("/test", (req, res) => {
-    let test = {title: "test"};
+    let resData = {
+        code: 200,
+        error: null,
+        data: {
+            title: "success"
+        }
+    };
 
-    res.status(200).send(test);
+    res.setHeader('Content-type', 'application/json');
+    res.statusCode = 200;
+    res.write(JSON.stringify(resData));
+    res.send();
 })
-.post("/test", urlencodedParser, (req, res) => {
+.post("/test", (req, res) => {
     res.setHeader('Content-type', 'application/json');
 
     if(req.headers["content-type"] !== 'application/json') {
@@ -31,13 +39,10 @@ app.get("/test", (req, res) => {
             }
         }));
     } else {
-        console.log(req.body);
         res.statusCode = 201;
         res.write(JSON.stringify({
             code: 201,
-            data: {
-                message: 'success request'
-            },
+            data: req.body,
             error: null
         }));
     }
