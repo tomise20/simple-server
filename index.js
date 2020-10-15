@@ -8,16 +8,14 @@ const port = 3000;
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-    console.log(req.url);
     res.send("Hello");
 });
 
 app.get("/test", (req, res) => {
     let resData = {
-        code: 200,
         error: null,
         data: {
-            title: "success"
+            message: "Success message!"
         }
     };
 
@@ -32,7 +30,6 @@ app.get("/test", (req, res) => {
     if(req.headers["content-type"] !== 'application/json') {
         res.statusCode = 400;
         res.write(JSON.stringify({
-            code: 400,
             data: null,
             error: {
                 message: 'Bad Request!'
@@ -41,8 +38,32 @@ app.get("/test", (req, res) => {
     } else {
         res.statusCode = 201;
         res.write(JSON.stringify({
-            code: 201,
-            data: req.body,
+            data: {
+                message: 'Success request!'
+            },
+            error: null
+        }));
+    }
+    res.send();
+})
+.delete("/test", (req, res) => {
+    res.setHeader('Content-type', 'application/json');
+
+    if(req.headers["content-type"] !== 'application/json') {
+        res.statusCode = 400;
+        res.write(JSON.stringify({
+            code: 400,
+            data: null,
+            error: {
+                message: 'Bad Request!'
+            }
+        }));
+    } else {
+        res.statusCode = 200;
+        res.write(JSON.stringify({
+            data: {
+                message: 'Success request!'
+            },
             error: null
         }));
     }
